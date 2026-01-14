@@ -69,7 +69,7 @@ const OfferDetails = () => {
                                 </div>
                             </div>
                             <div className="max-h-60 overflow-y-auto">
-                                {filteredFirms.map((firm, index) => (
+                                {filteredFirms.map((firm) => (
                                     <div
                                         key={firm}
                                         className={`px-4 py-3 cursor-pointer text-sm text-gray-600 hover:bg-gray-100 border-b border-gray-100 last:border-0`}

@@ -22,6 +22,12 @@ const EditFirmDialog = ({ isOpen, onClose }: EditFirmDialogProps) => {
     return (
         <div className="absolute top-[50px] left-[20px] z-30">
             <div className="bg-[#F5F5F5] rounded-lg shadow-xl w-[600px] p-6 relative border border-gray-200">
+                <button
+                    onClick={onClose}
+                    className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+                >
+                    <X size={20} />
+                </button>
                 <h3 className="text-lg font-bold text-gray-700 mb-6">Данни на фирмата</h3>
 
                 <div className="mb-2">
