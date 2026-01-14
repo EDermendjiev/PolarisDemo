@@ -1,11 +1,18 @@
 import { Pencil, Copy, Trash2, Check, ArrowRightLeft } from 'lucide-react';
 
-const ProductTable = () => {
+interface ProductTableProps {
+    onEdit: () => void;
+}
+
+const ProductTable = ({ onEdit }: ProductTableProps) => {
     return (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
             {/* Table Header Action */}
             <div className="flex justify-end p-2 bg-gray-50 border-b border-gray-200">
-                <button className="flex items-center text-gray-500 bg-gray-200 px-3 py-1 rounded text-sm hover:bg-gray-300 transition-colors">
+                <button
+                    onClick={onEdit}
+                    className="flex items-center text-gray-500 bg-gray-200 px-3 py-1 rounded text-sm hover:bg-gray-300 transition-colors"
+                >
                     <ArrowRightLeft size={16} className="mr-2" />
                     Промени позиция
                 </button>
@@ -100,7 +107,11 @@ const ProductTable = () => {
                             </td>
                             <td className="p-2 border border-gray-200 align-middle">
                                 <div className="flex space-x-2 justify-center">
-                                    <Pencil size={16} className="text-gray-500 hover:text-gray-700 cursor-pointer" />
+                                    <Pencil
+                                        size={16}
+                                        className="text-gray-500 hover:text-gray-700 cursor-pointer"
+                                        onClick={onEdit}
+                                    />
                                     <Copy size={16} className="text-gray-500 hover:text-gray-700 cursor-pointer" />
                                     <Trash2 size={16} className="text-gray-500 hover:text-danger cursor-pointer" />
                                 </div>
