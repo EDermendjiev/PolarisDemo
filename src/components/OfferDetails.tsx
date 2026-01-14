@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { ChevronDown, Pencil, User, Calendar, Search } from 'lucide-react';
+import EditFirmDialog from './EditFirmDialog';
 
 const OfferDetails = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [isFirmDialogOpen, setIsFirmDialogOpen] = useState(false);
     const [selectedFirm, setSelectedFirm] = useState("Поларис ООД");
     const [searchTerm, setSearchTerm] = useState("");
 
@@ -36,8 +38,21 @@ const OfferDetails = () => {
                         </div>
                     </h1>
 
+
                     {/* Pencil Icon */}
-                    <Pencil size={18} className="text-gray-400 cursor-pointer hover:text-gray-600 ml-2" />
+                    <div className="relative">
+                        <Pencil
+                            size={18}
+                            className="text-gray-400 cursor-pointer hover:text-gray-600 ml-2"
+                            onClick={() => setIsFirmDialogOpen(!isFirmDialogOpen)}
+                        />
+
+                        {/* Edit Firm Dialog */}
+                        <EditFirmDialog
+                            isOpen={isFirmDialogOpen}
+                            onClose={() => setIsFirmDialogOpen(false)}
+                        />
+                    </div>
 
                     {/* Dropdown Menu */}
                     {isDropdownOpen && (
