@@ -1,10 +1,11 @@
-import { Pencil, Copy, Trash2, Check, ArrowRightLeft } from 'lucide-react';
+import { useState } from 'react';
+import { Pencil, Copy, Trash2, Check, ArrowRightLeft, ArrowUp, ArrowDown } from 'lucide-react';
 
 interface ProductTableProps {
     onEdit: () => void;
 }
 
-const PRODUCTS = [
+const INITIAL_PRODUCTS = [
     {
         id: 1,
         model: "ACCORD RD",
@@ -68,6 +69,9 @@ const PRODUCTS = [
 ];
 
 const ProductTable = ({ onEdit }: ProductTableProps) => {
+    const [products, setProducts] = useState(INITIAL_PRODUCTS);
+    const [isRearranging, setIsRearranging] = useState(false);
+
     const calculatePrice = (price: number, discount: number) => {
         return price * (1 - discount / 100);
     };
@@ -76,16 +80,32 @@ const ProductTable = ({ onEdit }: ProductTableProps) => {
         return value.toFixed(2).replace('.', ',') + ' €';
     };
 
+    const moveRow = (index: number, direction: 'up' | 'down') => {
+        if (direction === 'up' && index === 0) return;
+        if (direction === 'down' && index === products.length - 1) return;
+
+        const newProducts = [...products];
+        const targetIndex = direction === 'up' ? index - 1 : index + 1;
+
+        // Swap elements
+        [newProducts[index], newProducts[targetIndex]] = [newProducts[targetIndex], newProducts[index]];
+
+        setProducts(newProducts);
+    };
+
     return (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
             {/* Table Header Action */}
             <div className="flex justify-end p-2 bg-gray-50 border-b border-gray-200">
                 <button
-                    onClick={onEdit}
-                    className="flex items-center text-gray-500 bg-gray-200 px-3 py-1 rounded text-sm hover:bg-gray-300 transition-colors"
+                    onClick={() => setIsRearranging(!isRearranging)}
+                    className={`flex items-center px-3 py-1 rounded text-sm transition-colors ${isRearranging
+                            ? 'bg-status-active text-white hover:bg-green-600'
+                            : 'text-gray-500 bg-gray-200 hover:bg-gray-300'
+                        }`}
                 >
                     <ArrowRightLeft size={16} className="mr-2" />
-                    Промени позиция
+                    {isRearranging ? 'Запази подредбата' : 'Промени позиция'}
                 </button>
             </div>
 
@@ -126,14 +146,33 @@ const ProductTable = ({ onEdit }: ProductTableProps) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {PRODUCTS.map((product, index) => {
+                        {products.map((product, index) => {
                             const finalPrice = calculatePrice(product.unitPrice, product.discount);
                             const total = finalPrice * product.quantity;
 
                             return (
                                 <tr key={product.id} className="bg-white hover:bg-gray-50">
                                     <td className="p-2 border border-gray-200 text-center align-middle">
-                                        <div className="w-5 h-5 border border-gray-300 rounded mx-auto bg-white"></div>
+                                        {isRearranging ? (
+                                            <div className="flex flex-col items-center gap-1">
+                                                <button
+                                                    onClick={() => moveRow(index, 'up')}
+                                                    disabled={index === 0}
+                                                    className="p-1 hover:bg-gray-100 rounded text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
+                                                >
+                                                    <ArrowUp size={14} />
+                                                </button>
+                                                <button
+                                                    onClick={() => moveRow(index, 'down')}
+                                                    disabled={index === products.length - 1}
+                                                    className="p-1 hover:bg-gray-100 rounded text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
+                                                >
+                                                    <ArrowDown size={14} />
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <div className="w-5 h-5 border border-gray-300 rounded mx-auto bg-white"></div>
+                                        )}
                                     </td>
                                     <td className="p-2 border border-gray-200 text-center text-gray-700 align-middle">{index + 1}</td>
                                     <td className="p-2 border border-gray-200 text-center align-middle">
