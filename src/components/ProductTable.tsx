@@ -5,6 +5,18 @@ interface ProductTableProps {
     onEdit: () => void;
 }
 
+const Checkbox = ({ checked, onChange }: { checked: boolean; onChange: () => void }) => (
+    <button
+        onClick={onChange}
+        className={`w-5 h-5 border rounded flex items-center justify-center mx-auto transition-all ${checked
+            ? 'border-status-active text-status-active bg-white ring-1 ring-status-active'
+            : 'border-gray-300 bg-white text-transparent hover:border-gray-400'
+            }`}
+    >
+        <Check size={14} className={checked ? 'opacity-100' : 'opacity-0'} />
+    </button>
+);
+
 const INITIAL_PRODUCTS = [
     {
         id: 1,
@@ -16,7 +28,9 @@ const INITIAL_PRODUCTS = [
         quantity: 10,
         unitPrice: 35.00,
         discount: 10,
-        description: "LED луната ACCORD ROUND е проектирана за вграден монтаж, предлагайки елегантно"
+        description: "LED луната ACCORD ROUND е проектирана за вграден монтаж, предлагайки елегантно",
+        selected: false,
+        hasDrawing: true
     },
     {
         id: 2,
@@ -28,7 +42,9 @@ const INITIAL_PRODUCTS = [
         quantity: 8,
         unitPrice: 38.00,
         discount: 5,
-        description: "Квадратна LED луна за вграждане с висока ефективност и модерен дизайн"
+        description: "Квадратна LED луна за вграждане с висока ефективност и модерен дизайн",
+        selected: false,
+        hasDrawing: true
     },
     {
         id: 3,
@@ -40,7 +56,9 @@ const INITIAL_PRODUCTS = [
         quantity: 5,
         unitPrice: 85.00,
         discount: 12,
-        description: "Линейно LED осветително тяло подходящо за офиси и търговски площи"
+        description: "Линейно LED осветително тяло подходящо за офиси и търговски площи",
+        selected: false,
+        hasDrawing: true
     },
     {
         id: 4,
@@ -52,7 +70,9 @@ const INITIAL_PRODUCTS = [
         quantity: 20,
         unitPrice: 15.00,
         discount: 0,
-        description: "Компактен LED спот с насочване, идеален за акцентно осветление"
+        description: "Компактен LED спот с насочване, идеален за акцентно осветление",
+        selected: false,
+        hasDrawing: true
     },
     {
         id: 5,
@@ -64,13 +84,18 @@ const INITIAL_PRODUCTS = [
         quantity: 12,
         unitPrice: 42.00,
         discount: 15,
-        description: "Стандартен LED панел 60x60 за растерен таван, без трептене"
+        description: "Стандартен LED панел 60x60 за растерен таван, без трептене",
+        selected: false,
+        hasDrawing: true
     }
 ];
 
 const ProductTable = ({ onEdit }: ProductTableProps) => {
     const [products, setProducts] = useState(INITIAL_PRODUCTS);
     const [isRearranging, setIsRearranging] = useState(false);
+    // State for the top row of checkboxes (11 columns)
+    const [headerChecks, setHeaderChecks] = useState<boolean[]>([true, true, true, true, true, true, true, false, true, true, true]);
+
 
     const calculatePrice = (price: number, discount: number) => {
         return price * (1 - discount / 100);
@@ -93,6 +118,20 @@ const ProductTable = ({ onEdit }: ProductTableProps) => {
         setProducts(newProducts);
     };
 
+    const toggleProductSelection = (id: number) => {
+        setProducts(products.map(p => p.id === id ? { ...p, selected: !p.selected } : p));
+    };
+
+    const toggleProductDrawing = (id: number) => {
+        setProducts(products.map(p => p.id === id ? { ...p, hasDrawing: !p.hasDrawing } : p));
+    };
+
+    const toggleHeaderCheck = (index: number) => {
+        const newChecks = [...headerChecks];
+        newChecks[index] = !newChecks[index];
+        setHeaderChecks(newChecks);
+    };
+
     return (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
             {/* Table Header Action */}
@@ -100,8 +139,8 @@ const ProductTable = ({ onEdit }: ProductTableProps) => {
                 <button
                     onClick={() => setIsRearranging(!isRearranging)}
                     className={`flex items-center px-3 py-1 rounded text-sm transition-colors ${isRearranging
-                            ? 'bg-status-active text-white hover:bg-green-600'
-                            : 'text-gray-500 bg-gray-200 hover:bg-gray-300'
+                        ? 'bg-status-active text-white hover:bg-green-600'
+                        : 'text-gray-500 bg-gray-200 hover:bg-gray-300'
                         }`}
                 >
                     <ArrowRightLeft size={16} className="mr-2" />
@@ -115,17 +154,14 @@ const ProductTable = ({ onEdit }: ProductTableProps) => {
                         {/* Checkbox Row */}
                         <tr className="bg-blue-100/50">
                             <th className="p-2 border border-gray-200 w-10"></th>
-                            <th className="p-2 border border-gray-200 w-10 text-center"><div className="w-5 h-5 border border-status-active rounded flex items-center justify-center mx-auto text-status-active"><Check size={14} /></div></th>
-                            <th className="p-2 border border-gray-200 w-24 text-center"><div className="w-5 h-5 border border-status-active rounded flex items-center justify-center mx-auto text-status-active"><Check size={14} /></div></th>
-                            <th className="p-2 border border-gray-200 w-16 text-center"><div className="w-5 h-5 border border-status-active rounded flex items-center justify-center mx-auto text-status-active"><Check size={14} /></div></th>
-                            <th className="p-2 border border-gray-200 text-center"><div className="w-5 h-5 border border-status-active rounded flex items-center justify-center mx-auto text-status-active"><Check size={14} /></div></th>
-                            <th className="p-2 border border-gray-200 w-16 text-center"><div className="w-5 h-5 border border-status-active rounded flex items-center justify-center mx-auto text-status-active"><Check size={14} /></div></th>
-                            <th className="p-2 border border-gray-200 w-16 text-center"><div className="w-5 h-5 border border-status-active rounded flex items-center justify-center mx-auto text-status-active"><Check size={14} /></div></th>
-                            <th className="p-2 border border-gray-200 w-24 text-center"><div className="w-5 h-5 border border-status-active rounded flex items-center justify-center mx-auto text-status-active"><Check size={14} /></div></th>
-                            <th className="p-2 border border-gray-200 w-16 text-center"><div className="w-5 h-5 border border-gray-300 rounded bg-white mx-auto"></div></th>
-                            <th className="p-2 border border-gray-200 w-24 text-center"><div className="w-5 h-5 border border-status-active rounded flex items-center justify-center mx-auto text-status-active"><Check size={14} /></div></th>
-                            <th className="p-2 border border-gray-200 w-28 text-center"><div className="w-5 h-5 border border-status-active rounded flex items-center justify-center mx-auto text-status-active"><Check size={14} /></div></th>
-                            <th className="p-2 border border-gray-200 text-center"><div className="w-5 h-5 border border-status-active rounded flex items-center justify-center mx-auto text-status-active"><Check size={14} /></div></th>
+                            {headerChecks.map((checked, index) => (
+                                <th key={index} className={`p-2 border border-gray-200 text-center ${index === 0 ? 'w-10' : ''
+                                    } ${index === 1 ? 'w-24' : ''} ${index === 2 ? 'w-16' : ''} ${index === 4 ? 'w-16' : ''
+                                    } ${index === 5 ? 'w-16' : ''} ${index === 6 ? 'w-24' : ''} ${index === 7 ? 'w-16' : ''
+                                    } ${index === 8 ? 'w-24' : ''} ${index === 9 ? 'w-28' : ''}`}>
+                                    <Checkbox checked={checked} onChange={() => toggleHeaderCheck(index)} />
+                                </th>
+                            ))}
                             <th className="p-2 border border-gray-200 w-20"></th>
                         </tr>
                         {/* Title Row */}
@@ -171,7 +207,10 @@ const ProductTable = ({ onEdit }: ProductTableProps) => {
                                                 </button>
                                             </div>
                                         ) : (
-                                            <div className="w-5 h-5 border border-gray-300 rounded mx-auto bg-white"></div>
+                                            <Checkbox
+                                                checked={product.selected}
+                                                onChange={() => toggleProductSelection(product.id)}
+                                            />
                                         )}
                                     </td>
                                     <td className="p-2 border border-gray-200 text-center text-gray-700 align-middle">{index + 1}</td>
@@ -182,7 +221,10 @@ const ProductTable = ({ onEdit }: ProductTableProps) => {
                                         </div>
                                     </td>
                                     <td className="p-2 border border-gray-200 text-center align-middle">
-                                        <div className="w-5 h-5 border border-status-active rounded flex items-center justify-center mx-auto text-status-active ring-1 ring-status-active"><Check size={14} /></div>
+                                        <Checkbox
+                                            checked={product.hasDrawing}
+                                            onChange={() => toggleProductDrawing(product.id)}
+                                        />
                                     </td>
                                     <td className="p-4 border border-gray-200 align-middle">
                                         <div className="grid grid-cols-[max-content_auto] gap-x-4 gap-y-1 text-sm text-gray-600">
