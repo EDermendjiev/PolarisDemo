@@ -58,7 +58,7 @@ export const generateExcel = async (products: Product[]) => {
         });
         worksheet.addImage(imageId, {
             tl: { col: 0, row: 0 },
-            ext: { width: 300, height: 80 }
+            ext: { width: 180, height: 120 }
         });
     }
 
@@ -80,13 +80,13 @@ export const generateExcel = async (products: Product[]) => {
                 extension: extension === 'jpg' ? 'jpeg' : extension,
             });
 
-            // Calculate position
-            const col = (i % 4) * 2 + 2; // Spread across columns
-            const row = Math.floor(i / 4);
+            // Calculate position - increase spacing to prevent overlap
+            const col = (i % 4) * 2.5 + 3; // Start at col 3, spread 2.5 columns apart
+            const row = Math.floor(i / 4) * 3; // Row 0 for first group, row 3 for second
 
             worksheet.addImage(imageId, {
                 tl: { col: col, row: row },
-                ext: { width: 100, height: 40 },
+                ext: { width: 120, height: 45 },
                 editAs: 'oneCell'
             });
         }
