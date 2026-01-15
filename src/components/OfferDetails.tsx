@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { ChevronDown, Pencil, User, Calendar, Search } from 'lucide-react';
 import EditFirmDialog from './EditFirmDialog';
 
@@ -7,6 +7,15 @@ const OfferDetails = () => {
     const [isFirmDialogOpen, setIsFirmDialogOpen] = useState(false);
     const [selectedFirm, setSelectedFirm] = useState("Поларис ООД");
     const [searchTerm, setSearchTerm] = useState("");
+    const [status, setStatus] = useState("Активна");
+    const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
+    const [date, setDate] = useState("2026-01-01");
+    const dateInputRef = useRef<HTMLInputElement>(null);
+
+    const formatDate = (dateStr: string) => {
+        const [year, month, day] = dateStr.split('-');
+        return `${day}.${month}.${year}`;
+    };
 
     const firms = [
         "Фирма ЕООД 1",
@@ -86,10 +95,33 @@ const OfferDetails = () => {
                     )}
                 </div>
 
-                <button className="bg-status-active text-white px-6 py-2 rounded flex items-center space-x-2">
-                    <span>Активна</span>
-                    <ChevronDown size={18} className="ml-2" />
-                </button>
+                <div className="relative">
+                    <button
+                        onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
+                        className={`${status === 'Активна' ? 'bg-status-active' : 'bg-gray-500'} text-white px-6 py-2 rounded flex items-center space-x-2 transition-colors`}
+                    >
+                        <span>{status}</span>
+                        <ChevronDown size={18} className={`ml-2 transition-transform ${isStatusDropdownOpen ? 'rotate-180' : ''}`} />
+                    </button>
+
+                    {isStatusDropdownOpen && (
+                        <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-100 z-20 overflow-hidden">
+                            {['Активна', 'Приключена'].map((option) => (
+                                <button
+                                    key={option}
+                                    className={`w-full text-left px-4 py-3 text-sm hover:bg-gray-50 transition-colors ${status === option ? 'font-medium text-gray-900 bg-gray-50' : 'text-gray-600'
+                                        }`}
+                                    onClick={() => {
+                                        setStatus(option);
+                                        setIsStatusDropdownOpen(false);
+                                    }}
+                                >
+                                    {option}
+                                </button>
+                            ))}
+                        </div>
+                    )}
+                </div>
             </div>
 
             <div className="flex items-center space-x-12 border-t pt-6">
@@ -99,10 +131,22 @@ const OfferDetails = () => {
                     <span className="font-bold text-gray-700">Иван Иванов</span>
                 </div>
 
-                <div className="flex items-center text-gray-600">
+                <div
+                    className="flex items-center text-gray-600 cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors relative"
+                    onClick={() => dateInputRef.current?.showPicker()}
+                >
                     <Calendar className="mr-3" size={24} />
-                    <span className="font-semibold text-gray-700 mr-2">01.01.2026</span>
+                    <span className="font-semibold text-gray-700 mr-2">
+                        {formatDate(date)}
+                    </span>
                     <ChevronDown size={18} className="text-gray-400" />
+                    <input
+                        type="date"
+                        ref={dateInputRef}
+                        className="absolute opacity-0 w-0 h-0"
+                        value={date}
+                        onChange={(e) => setDate(e.target.value)}
+                    />
                 </div>
             </div>
         </div>
