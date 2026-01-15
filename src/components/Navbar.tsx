@@ -1,8 +1,17 @@
 import { Plus } from 'lucide-react';
 
-const Navbar = () => {
-    const navItems = ['Продукти', 'Оферти', 'Фирми', 'Профил'];
-    const activeItem = 'Оферти';
+interface NavbarProps {
+    currentView: string;
+    onNavigate: (view: string) => void;
+}
+
+const Navbar = ({ currentView, onNavigate }: NavbarProps) => {
+    const navItems = [
+        { label: 'Продукти', id: 'products' },
+        { label: 'Оферти', id: 'offers' },
+        { label: 'Фирми', id: 'firms' },
+        { label: 'Профил', id: 'profile' }
+    ];
 
     return (
         <div className="bg-header-bg text-white">
@@ -10,14 +19,14 @@ const Navbar = () => {
                 {/* Navigation Links */}
                 <nav className="flex items-center h-full">
                     {navItems.map((item) => (
-                        <a
-                            key={item}
-                            href="#"
-                            className={`h-full flex items-center px-6 border-r border-[#6B8CA9] hover:bg-[#4A6B88] transition-colors ${item === activeItem ? 'bg-[#4A6B88]' : ''
+                        <button
+                            key={item.id}
+                            onClick={() => onNavigate(item.id)}
+                            className={`h-full flex items-center px-6 border-r border-[#6B8CA9] hover:bg-[#4A6B88] transition-colors focus:outline-none ${currentView === item.id ? 'bg-[#4A6B88]' : ''
                                 }`}
                         >
-                            {item}
-                        </a>
+                            {item.label}
+                        </button>
                     ))}
                 </nav>
 
