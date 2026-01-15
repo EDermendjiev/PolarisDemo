@@ -1,7 +1,24 @@
 import { useState } from 'react';
 import { Pencil, Copy, Trash2, Check, ArrowRightLeft, ArrowUp, ArrowDown } from 'lucide-react';
 
+export interface Product {
+    id: number;
+    model: string;
+    code: string;
+    power: string;
+    flux: string;
+    colorTemp: string;
+    quantity: number;
+    unitPrice: number;
+    discount: number;
+    description: string;
+    selected: boolean;
+    hasDrawing: boolean;
+}
+
 interface ProductTableProps {
+    products: Product[];
+    onUpdateProducts: (products: Product[]) => void;
     onEdit: () => void;
 }
 
@@ -17,81 +34,7 @@ const Checkbox = ({ checked, onChange }: { checked: boolean; onChange: () => voi
     </button>
 );
 
-const INITIAL_PRODUCTS = [
-    {
-        id: 1,
-        model: "ACCORD RD",
-        code: "1007",
-        power: "12W",
-        flux: "960 lm",
-        colorTemp: "3000K",
-        quantity: 10,
-        unitPrice: 35.00,
-        discount: 10,
-        description: "LED луната ACCORD ROUND е проектирана за вграден монтаж, предлагайки елегантно",
-        selected: false,
-        hasDrawing: true
-    },
-    {
-        id: 2,
-        model: "ACCORD SQ",
-        code: "1008",
-        power: "15W",
-        flux: "1200 lm",
-        colorTemp: "4000K",
-        quantity: 8,
-        unitPrice: 38.00,
-        discount: 5,
-        description: "Квадратна LED луна за вграждане с висока ефективност и модерен дизайн",
-        selected: false,
-        hasDrawing: true
-    },
-    {
-        id: 3,
-        model: "LINEAR PRO",
-        code: "2001",
-        power: "30W",
-        flux: "2400 lm",
-        colorTemp: "4000K",
-        quantity: 5,
-        unitPrice: 85.00,
-        discount: 12,
-        description: "Линейно LED осветително тяло подходящо за офиси и търговски площи",
-        selected: false,
-        hasDrawing: true
-    },
-    {
-        id: 4,
-        model: "SPOT MAX",
-        code: "3005",
-        power: "5W",
-        flux: "400 lm",
-        colorTemp: "3000K",
-        quantity: 20,
-        unitPrice: 15.00,
-        discount: 0,
-        description: "Компактен LED спот с насочване, идеален за акцентно осветление",
-        selected: false,
-        hasDrawing: true
-    },
-    {
-        id: 5,
-        model: "PANEL 6060",
-        code: "4001",
-        power: "40W",
-        flux: "3600 lm",
-        colorTemp: "4000K",
-        quantity: 12,
-        unitPrice: 42.00,
-        discount: 15,
-        description: "Стандартен LED панел 60x60 за растерен таван, без трептене",
-        selected: false,
-        hasDrawing: true
-    }
-];
-
-const ProductTable = ({ onEdit }: ProductTableProps) => {
-    const [products, setProducts] = useState(INITIAL_PRODUCTS);
+const ProductTable = ({ products, onUpdateProducts, onEdit }: ProductTableProps) => {
     const [isRearranging, setIsRearranging] = useState(false);
     // State for the top row of checkboxes (11 columns)
     const [headerChecks, setHeaderChecks] = useState<boolean[]>([true, true, true, true, true, true, true, false, true, true, true]);
@@ -115,15 +58,15 @@ const ProductTable = ({ onEdit }: ProductTableProps) => {
         // Swap elements
         [newProducts[index], newProducts[targetIndex]] = [newProducts[targetIndex], newProducts[index]];
 
-        setProducts(newProducts);
+        onUpdateProducts(newProducts);
     };
 
     const toggleProductSelection = (id: number) => {
-        setProducts(products.map(p => p.id === id ? { ...p, selected: !p.selected } : p));
+        onUpdateProducts(products.map(p => p.id === id ? { ...p, selected: !p.selected } : p));
     };
 
     const toggleProductDrawing = (id: number) => {
-        setProducts(products.map(p => p.id === id ? { ...p, hasDrawing: !p.hasDrawing } : p));
+        onUpdateProducts(products.map(p => p.id === id ? { ...p, hasDrawing: !p.hasDrawing } : p));
     };
 
     const toggleHeaderCheck = (index: number) => {

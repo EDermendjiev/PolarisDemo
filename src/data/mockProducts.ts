@@ -1,0 +1,72 @@
+export const PRODUCTS = [
+    {
+        id: 1,
+        model: "ACCORD RD",
+        code: "1007",
+        power: "12W",
+        flux: "960 lm",
+        colorTemp: "3000K",
+        quantity: 10,
+        unitPrice: 35.00,
+        discount: 10,
+        description: "LED луната ACCORD ROUND е проектирана за вграден монтаж, предлагайки елегантно",
+        selected: false,
+        hasDrawing: true
+    },
+    {
+        id: 2,
+        model: "ACCORD SQ",
+        code: "1008",
+        power: "15W",
+        flux: "1200 lm",
+        colorTemp: "4000K",
+        quantity: 8,
+        unitPrice: 38.00,
+        discount: 5,
+        description: "Квадратна LED луна за вграждане с висока ефективност и модерен дизайн",
+        selected: false,
+        hasDrawing: true
+    },
+    {
+        id: 3,
+        model: "LINEAR PRO",
+        code: "2001",
+        power: "30W",
+        flux: "2400 lm",
+        colorTemp: "4000K",
+        quantity: 5,
+        unitPrice: 85.00,
+        discount: 12,
+        description: "Линейно LED осветително тяло подходящо за офиси и търговски площи",
+        selected: false,
+        hasDrawing: true
+    },
+    {
+        id: 4,
+        model: "SPOT MAX",
+        code: "3005",
+        power: "5W",
+        flux: "400 lm",
+        colorTemp: "3000K",
+        quantity: 20,
+        unitPrice: 15.00,
+        discount: 0,
+        description: "Компактен LED спот с насочване, идеален за акцентно осветление",
+        selected: false,
+        hasDrawing: true
+    },
+    {
+        id: 5,
+        model: "PANEL 6060",
+        code: "4001",
+        power: "40W",
+        flux: "3600 lm",
+        colorTemp: "4000K",
+        quantity: 12,
+        unitPrice: 42.00,
+        discount: 15,
+        description: "Стандартен LED панел 60x60 за растерен таван, без трептене",
+        selected: false,
+        hasDrawing: true
+    }
+];
