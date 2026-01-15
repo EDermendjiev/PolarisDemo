@@ -68,15 +68,16 @@ export const generateExcel = async (products: Product[]) => {
     });
     worksheet.addImage(imageId, {
       tl: { col: 0, row: 0 },
-      ext: { width: 180, height: 80 }, // Spans rows 1-2 (2 rows × 40 points)
+      ext: { width: 200, height: 180 }, // Spans rows 1-2 (2 rows × 40 points)
     });
   }
 
-  // Set column widths for logo columns
-  worksheet.getColumn(4).width = 50; // Column E - expanded for Nowodvorski
-  worksheet.getColumn(5).width = 50; // Column F
-  worksheet.getColumn(6).width = 50; // Column G
-  worksheet.getColumn(7).width = 50; // Column H
+  // Set column widths for logo columns (only for header section)
+  // These will be overridden for the product table section
+  worksheet.getColumn(4).width = 50; // Column E - expanded for Nowodvorski logos
+  worksheet.getColumn(5).width = 50; // Column F - for logos
+  worksheet.getColumn(6).width = 50; // Column G - for logos
+  worksheet.getColumn(7).width = 50; // Column H - for logos
 
   // Partner Logos - 2-column grid pattern (all centered)
   // ExcelJS doesn't support direct offsetX/offsetY, so we'll use fractional column positions
@@ -143,28 +144,56 @@ export const generateExcel = async (products: Product[]) => {
   await addCenteredLogo("/logos/idealluxLogo.png", 6, 1, "png");
 
   // Company Info (Column C, Rows 3-6, individual cells, not merged)
-  worksheet.getCell("C3").value = "Варна";
-  worksheet.getCell("C3").alignment = { vertical: "top", horizontal: "left" };
-  worksheet.getCell("C3").font = { size: 9 };
+  worksheet.getCell("B3").value = "Варна";
+  worksheet.getCell("B3").alignment = { vertical: "top", horizontal: "left" };
+  worksheet.getCell("B3").font = { size: 9 };
 
-  worksheet.getCell("C4").value = "ул. Мургаш №5";
-  worksheet.getCell("C4").alignment = { vertical: "top", horizontal: "left" };
-  worksheet.getCell("C4").font = { size: 9 };
+  worksheet.getCell("B4").value = "ул. Мургаш №5";
+  worksheet.getCell("B4").alignment = { vertical: "top", horizontal: "left" };
+  worksheet.getCell("B4").font = { size: 9 };
 
-  worksheet.getCell("C5").value = "тел: 0889128161";
+  worksheet.getCell("B5").value = "тел: 0889128161";
   worksheet.getCell("C5").alignment = { vertical: "top", horizontal: "left" };
-  worksheet.getCell("C5").font = { size: 9 };
+  worksheet.getCell("B  5").font = { size: 9 };
 
-  worksheet.getCell("C6").value = "e-mail: k.borisov@polarislighting.bg";
-  worksheet.getCell("C6").alignment = { vertical: "top", horizontal: "left" };
-  worksheet.getCell("C6").font = { size: 9 };
+  worksheet.getCell("B6").value = "e-mail: k.borisov@polarislighting.bg";
+  worksheet.getCell("B6").alignment = { vertical: "top", horizontal: "left" };
+  worksheet.getCell("B6").font = { size: 9 };
 
   // Offer Title (Row 8, 0-indexed: row 7)
-  worksheet.mergeCells("F8:M8");
-  const titleCell = worksheet.getCell("F8");
+  worksheet.mergeCells("D8:L8");
+  const titleCell = worksheet.getCell("D8");
   titleCell.value = "Оферта Севдана - къща - Поръчка 3"; // Dynamic title would go here
   titleCell.font = { bold: true, size: 14 };
   titleCell.alignment = { horizontal: "center" };
+
+  // Reset column widths for product table (independent of header section)
+  // Column A: №
+  worksheet.getColumn(1).width = 5;
+  // Column B: Снимка (Image)
+  worksheet.getColumn(2).width = 15;
+  // Column C: Чертеж (Drawing)
+  worksheet.getColumn(3).width = 15;
+  // Column D: Описание part 1 (Description - merged D-F)
+  worksheet.getColumn(4).width = 20;
+  // Column E: Описание part 2
+  worksheet.getColumn(5).width = 20;
+  // Column F: Описание part 3
+  worksheet.getColumn(6).width = 20;
+  // Column G: Мярка (Measure)
+  worksheet.getColumn(7).width = 8;
+  // Column H: Кол. (Quantity)
+  worksheet.getColumn(8).width = 8;
+  // Column I: Ед. цена (Unit Price)
+  worksheet.getColumn(9).width = 12;
+  // Column J: 15% ТО (Discount)
+  worksheet.getColumn(10).width = 12;
+  // Column K: Обща цена без ДДС part 1 (Total - merged K-M)
+  worksheet.getColumn(11).width = 12;
+  // Column L: Обща цена без ДДС part 2
+  worksheet.getColumn(12).width = 12;
+  // Column M: Обща цена без ДДС part 3
+  worksheet.getColumn(13).width = 12;
 
   // --- Table Header ---
   const headerRowIdx = 9; // Row 9 (0-indexed: row 8) - moved up one row since title is now at row 8
