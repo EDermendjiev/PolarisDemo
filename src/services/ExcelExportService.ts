@@ -68,7 +68,7 @@ export const generateExcel = async (products: Product[]) => {
     });
     worksheet.addImage(imageId, {
       tl: { col: 0, row: 0 },
-      ext: { width: 200, height: 180 }, // Spans rows 1-2 (2 rows × 40 points)
+      ext: { width: 200, height: 160 }, // Spans rows 1-2 (2 rows × 40 points)
     });
   }
 
@@ -143,22 +143,39 @@ export const generateExcel = async (products: Product[]) => {
   // G2: ideal lux (centered)
   await addCenteredLogo("/logos/idealluxLogo.png", 6, 1, "png");
 
-  // Company Info (Column C, Rows 3-6, individual cells, not merged)
-  worksheet.getCell("B3").value = "Варна";
-  worksheet.getCell("B3").alignment = { vertical: "top", horizontal: "left" };
-  worksheet.getCell("B3").font = { size: 9 };
+  // Remove borders from partner logo cells to hide separation lines
+  const partnerLogoCells = [
+    "D1",
+    "D2", // DeltaLight, Philips
+    "E1",
+    "E2", // Nowodvorski, Novaluce
+    "F1",
+    "F2", // Redo, ARELUX
+    "G1",
+    "G2", // LEDS C4, ideal lux
+  ];
+  partnerLogoCells.forEach((cellRef) => {
+    const cell = worksheet.getCell(cellRef);
+    // Remove all borders by setting empty border object
+    cell.border = {};
+  });
 
-  worksheet.getCell("B4").value = "ул. Мургаш №5";
+  // Company Info (Column C, Rows 3-6, individual cells, not merged)
+  worksheet.getCell("B4").value = "Варна";
   worksheet.getCell("B4").alignment = { vertical: "top", horizontal: "left" };
   worksheet.getCell("B4").font = { size: 9 };
 
-  worksheet.getCell("B5").value = "тел: 0889128161";
-  worksheet.getCell("C5").alignment = { vertical: "top", horizontal: "left" };
-  worksheet.getCell("B  5").font = { size: 9 };
+  worksheet.getCell("B5").value = "ул. Мургаш №5";
+  worksheet.getCell("B5").alignment = { vertical: "top", horizontal: "left" };
+  worksheet.getCell("B5").font = { size: 9 };
 
-  worksheet.getCell("B6").value = "e-mail: k.borisov@polarislighting.bg";
+  worksheet.getCell("B6").value = "тел: 0889128161";
   worksheet.getCell("B6").alignment = { vertical: "top", horizontal: "left" };
   worksheet.getCell("B6").font = { size: 9 };
+
+  worksheet.getCell("B7").value = "e-mail: k.borisov@polarislighting.bg";
+  worksheet.getCell("B7").alignment = { vertical: "top", horizontal: "left" };
+  worksheet.getCell("B7").font = { size: 9 };
 
   // Offer Title (Row 8, 0-indexed: row 7)
   worksheet.mergeCells("D8:L8");
