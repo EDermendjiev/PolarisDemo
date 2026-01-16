@@ -369,11 +369,11 @@ export const generateExcel = async (products: Product[]) => {
   currentRowIdx = termsStartRow + terms.length + 2;
   const footerCell = worksheet.getCell(`A${currentRowIdx}`);
   footerCell.value = "гр. Варна\nТелефон: 0889128161";
-  footerCell.alignment = { wrapText: true };
+  footerCell.alignment = { wrapText: false };
 
   const signatureCell = worksheet.getCell(`H${currentRowIdx}`);
   signatureCell.value = "Търговски представител:\nКирил Борисов";
-  signatureCell.alignment = { wrapText: true, horizontal: "center" };
+  signatureCell.alignment = { wrapText: false, horizontal: "center" };
 
   // Generate file
   const buffer = await workbook.xlsx.writeBuffer();
